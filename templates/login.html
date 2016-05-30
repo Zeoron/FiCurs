@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Peixera_SRovira_1.0</title>
+    {% load staticfiles %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.3.js" integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js" integrity="sha256-DI6NdAhhFRnO2k51mumYeDShet3I8AKCQf/tf7ARNhI=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+
+
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+
+
+    <!--MEDIA QUERY-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!--FUENTES DE TEXTO-->
+    <link href='https://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    {%if missatge == null %}
+    <div class="presenta">
+        <div>Benvinguts a... </div>
+        <div>Under the Sea</div>
+        {% load staticfiles %}
+        <div><img src="{% static 'css/pez_test2.png' %}"></img>
+        </div>
+    </div>
+    {%endif%}
+    <div class="body_login">
+        <div class="missatgeEntrada">Accedeix al teu espai...</div>
+        <div class="panell_login">
+            <div class="login">
+                <form name="LoginForm" action="/login/" method="post">
+                    {% csrf_token %}
+                    <div class="primer_div_form">
+                        <label for="username">Usuari:</label>
+                        <input type="text" id="username" name="username" placeholder="Ex: Filomenu">
+                    </div>
+                    <div>
+                        <label for="password">Contrasenya:</label>
+                        <input type="password" name="password" id="password" placeholder="Password">
+                    </div>
+                    <div>
+                        <button id="acces" type="submit">Accedeix</button>
+                    </div>
+                </form>
+                <form action="../registre">
+                    <div>
+                        <button id="registre" type="submit">Registre</button>
+                    </div>
+                </form>
+                <div id="msjError"></div>
+                <div id="msjError2">{{missatge}}</div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    {% load staticfiles %}
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>
