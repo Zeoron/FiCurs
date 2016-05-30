@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peixera_SRovira_1.0</title>
+  {% load staticfiles %}
+  <link rel="shortcut icon" href="{% static 'css/favicon.ico' %}"> {% load staticfiles %}
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-1.12.3.js" integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js" integrity="sha256-DI6NdAhhFRnO2k51mumYeDShet3I8AKCQf/tf7ARNhI=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+
+  <!--MEDIA QUERY-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <!--FUENTES DE TEXTO-->
+  <link href='https://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
+</head>
+
+<body ng-app="appLearn">
+  <div class="loading"></div>
+  <div ng-controller="Peixera" class="peixosss">
+    <div id="panell_usuari">
+      <div>
+        <img ng-src="../media{[{infoUsuari.imatgePerfil}]}">
+      </div>
+      <div>Usuari: {[{infoUsuari.nom}]}</div>
+      <div>Monedes: {[{infoUsuari.monedes}]}</div>
+      <div>Peixos comprats: {[{infoUsuari.peixosComprats}]}</div>
+      <div id="tancarPerfil">Tancar</div>
+    </div>
+    <div id="alerta_compra">
+      <div>Ha aparegut un peix no vist abans al teu cofre!!! <br> Per continuar amb l'exoericencia necessites tornar a carregar la pàgina</div>
+      <div onclick="location.reload()">Recarrega</div>
+    </div>
+    <div class="general">
+      <div class="panell_superior panell" id="panell_superior">
+        <div class="icono">ICONO</div>
+        <div class="botonera">
+          <div id="recollidor" data-drag="true" data-jqyoui-options="{revert: 'invalid',scroll: false, helper: 'clone' , appendTo: 'body',  accept:'.cofrePeix'}" jqyoui-draggable='{onStart:"startMovement(peixFora, $index)", animate: true, placeholder: "keep"}'>
+            <img src="../media/Red1.png">
+          </div>
+          <div id="panellMissatges">
+          </div>
+          <div>
+            <div>
+              <img ng-src="../media/Moneda.png">
+            </div>
+            <div>{[{infoUsuari.monedes}]}</div>
+          </div>
+        </div>
+        <!--<div class="perfil_usuari">-->
+        <!--  <div>{[{infoUsuari.nom}]} - {[{infoUsuari.monedes}]}-->
+        <!--    <div></div>-->
+        <!--  </div>-->
+        <!--</div>-->
+      </div>
+      <div class="dropPeixos" data-drop="true" jqyoui-droppable="{onDrop:'peixosANedar($data,$event)'}"></div>
+      <div class="panell_esquerre panell panell_esquerre_tancat">
+        <div class="boto_desplegable" id="panell_esquerre_boto">
+          <div class="lateral">
+            <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-bars fa-stack-1x fa-inverse"></i>
+          </span>
+          </div>
+        </div>
+        <div class="menu_principal">
+          <div class="titol_menus">MENÚ PRINCIPAL</div>
+          <div class="menu_principal_contingut">
+            <div>
+              <img <img ng-src="../media{[{infoUsuari.imatgePerfil}]}">
+            </div>
+            <div id="obrePerfil">
+              <i class="fa fa-user" aria-hidden="true"></i> Perfil
+            </div>
+            <div onclick=”location.href=’http://www.google.es’;”>
+              <a href="../sortir"><i class="fa fa-sign-out" aria-hidden="true"></i>  Sortir</a>
+            </div>
+            <div id="mesDades">
+              <i class="fa fa-info-circle" aria-hidden="true"></i> Més dades
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-controller="CofreController" class="panell_dret panell panell_dret_tancat">
+        <div class="boto_desplegable" id="panell_dret_boto">
+          <div class="lateral">
+            <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-archive fa-stack-1x fa-inverse"></i>
+          </span>
+          </div>
+        </div>
+        <div ng-init="tab = 1" class="cofre">
+          <p class="titol_menus">EL MEU COFRE</p>
+          <div class="botonera_cofre">
+            <div ng-click="tab = 1" ng-class="{boto_cofre_actiu:tab===1}" class="botons_cofre">
+              Peixos
+            </div>
+            <div ng-click="tab = 2" ng-class="{boto_cofre_actiu:tab===2}" class="botons_cofre">
+              Decoració
+            </div>
+          </div>
+          <div class="contPeixos" data-drop="true" jqyoui-droppable="{onDrop:'guardarPeix($data,$event)', onOver:'aplicaClass()', onOut:'removeClass()'}">
+            <div ng-show="tab == 1" class="elements_cofre_scroll">
+              <div class="cofre_peix" ng-repeat="peix in peixosEnCofre" ng-hide="peix.quantitat <= peix.quantitatpeixera" data-drag="peix" data-jqyoui-options="{revert: 'invalid', helper: 'clone'}" jqyoui-draggable="{onStart:'startMovement(peix, $index)', animate: true}">
+                <div class="cofre_peix_imatge"><img ng-src="../media{[{peix.imatge}]}"></div>
+                <div class="cofre_peix_text">
+                  <div class="nom_peix">{[{peix.nom_peix}]}</div>
+                  <div class="dades_peix">
+                    <div>
+                      <span class="moneda_hora">{[{peix.monedes_per_hora}]}</span> /h
+                    </div>
+                    <div>
+                      x{[{peix.quantitat-peix.quantitatpeixera}]}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div ng-show="tab == 2" class="elements_cofre_scroll">
+              <div>PROXIMAMENT!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-controller="BotigaController" class="panell_inferior panell panell_inferior_tancat">
+        <div class="boto_desplegable" id="panell_inferior_boto">
+          <div class="botiga">
+            <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-shopping-basket fa-stack-1x fa-inverse"></i>
+          </span>
+          </div>
+        </div>
+        <div class="panell_botiga">
+          <p class="titol_menus">La botiga</p>
+          <div class="panell_botiga_gen">
+            <div class="botiga_botonera" ng-init="tabBotiga=1">
+              <div class="botons_botiga" ng-class="{actiu: tabBotiga === 1}" ng-click="tabBotiga = 1">
+                <div>Peixos</div>
+              </div>
+              <div class="botons_botiga" ng-class="{actiu: tabBotiga == 2}" ng-click="tabBotiga = 2">
+                <div>Decoració</div>
+              </div>
+            </div>
+            <div class="botiga_elements">
+              <div ng-show="tabBotiga == 1" class="elements" ng-repeat="peix in peixos">
+                <div class="element_up">
+                  <div class="element_imatge">
+                    <img ng-src="../media{[{peix.thubmnail}]}">
+                  </div>
+                  <div class="element_dades">
+                    <p>{[{peix.nom}]}</p>
+                    <p><span class="moneda_hora">{[{peix.monedes_hora}]}</span> /h</p>
+                  </div>
+                </div>
+                <div class="element_down" ng-click="comprarPeix(peix)">
+                  <p>{[{peix.preu}]} monedes</p>
+                </div>
+              </div>
+
+              <div ng-show="tabBotiga == 2">
+                <div>PROXIMAMENT!</div>
+                <!--  <div class="element_up">-->
+                <!--    <div class="element_imatge">-->
+                <!--      <img ng-src="../media{[{peix.thubmnail}]}">-->
+                <!--    </div>-->
+                <!--    <div class="element_dades">-->
+                <!--      <p>{[{peix.nom}]}</p>-->
+                <!--      <p><span class="moneda_hora">{[{peix.monedes_hora}]}</span> /h</p>-->
+                <!--    </div>-->
+                <!--  </div>-->
+                <!--  <div class="element_down" ng-click="comprarPeix(peix)">-->
+                <!--    <p>{[{peix.preu}]} monedes</p>-->
+                <!--  </div>-->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--PEIXOS QUE ES MOUEN-->
+    <div class="peixUnitat" id="{[{$index * peixFora.idGeneral}]}" ng-repeat="peixFora in peixosForaCofre" repeat-end="onEnd()" ng-init="posaId($index, peixFora)" data-drag="true" data-jqyoui-options="{revert: 'invalid',scroll: false, helper: 'clone' , appendTo: 'body'}"
+    jqyoui-draggable="{onStart:'startMovement(peixFora, $index)', animate: true, placeholder: 'keep'}">
+      <img ng-src="../media{[{peixFora.imatge}]}" />
+    </div>
+    <!--MONEDES QUE CAUEN-->
+    <div id="{[{'moneda'+moneda.id}]}" class="moneda" ng-repeat="moneda in llistaMonedesPendents" repeat-end="onEndMonedes()" ng-click="recollirMoneda(moneda)" data-drop="true" jqyoui-droppable="{onOver:'recollirMoneda(moneda)'}">
+
+    </div>
+  </div>
+
+  <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/plugins/CSSPlugin.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.js"></script>
+  {% load staticfiles %}
+  <script src="{% static 'js/script.js' %}"></script>
+  {% load staticfiles %}
+  <script src="{% static 'js/angular.js' %}"></script>
+  {% load staticfiles %}
+  <script src="{% static 'js/angular-dragdrop.js' %}"></script>
+  {% load staticfiles %}
+  <script src="{% static 'js/angular-animate.min.js' %}"></script>
+  {% load staticfiles %}
+  <script src="{% static 'js/jquery.gsap.min.js' %}"></script>
+  {% load staticfiles %}
+  <script src="{% static 'js/TweenLite.min.js' %}"></script>
+  {% load staticfiles %}
+  <script src="{% static 'js/TweenMax.min.js' %}"></script>
+
+
+
+</body>
+
+</html>
